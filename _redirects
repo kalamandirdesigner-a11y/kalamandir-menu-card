@@ -1,0 +1,7 @@
+# One clean link (and one QR) per store — the page reads the path itself.
+/ahmedabad   /index.html   200
+/borivali    /index.html   200
+/surat       /index.html   200
+/kosamba     /index.html   200
+/bharuch     /index.html   200
+/vapi        /index.html   200

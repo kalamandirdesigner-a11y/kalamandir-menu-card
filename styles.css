@@ -1,0 +1,460 @@
+/* Jost (SIL OFL, fonts/JOST-OFL.txt) — self-hosted so the page pulls nothing from a
+   third-party origin and the CSP can stay locked to 'self'. One variable file covers
+   the 300-500 range the design uses. */
+@font-face{
+  font-family:"Jost";
+  src:url("fonts/jost-var.woff2") format("woff2");
+  font-weight:300 500;font-style:normal;font-display:swap;
+}
+
+/* ITC Avant Garde Gothic. Where the licensed face is not installed we serve
+   TeX Gyre Adventor — GUST's free, metric-compatible cut of it (licence in
+   fonts/GUST-FONT-LICENSE.txt). Century Gothic covers most Windows machines. */
+@font-face{
+  font-family:"Adventor";
+  src:url("fonts/adventor-400.woff2") format("woff2");
+  font-weight:400;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:"Adventor";
+  src:url("fonts/adventor-700.woff2") format("woff2");
+  font-weight:700;font-style:normal;font-display:swap;
+}
+
+/* ═══════════════════════════════════════════════════════
+   Kalamandir · flat brand palette, one accent, 4px rhythm
+   ═══════════════════════════════════════════════════════ */
+:root{
+  --brown:#7A5222;
+  --brown-d:#4A2F11;   /* brand bar */
+  --brown-x:#3A240D;   /* action bar */
+  --gold:#C58C36;
+  --gold-d:#A97327;
+  --cream:#F6EDE0;
+  --desk:#EFE9E1;      /* surface the pages sit on */
+  --white:#FFFFFF;
+  --ink:#1B1712;
+  --ink-2:#6B625A;
+  --ink-3:#9C9082;
+  --line:#E7E1D9;
+  --line-2:#F2EEE8;
+  --edge:#DFD7CB;      /* paper edge */
+  --pad:clamp(12px,4vw,20px);
+  --font:"Jost",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  --avant:"ITC Avant Garde Gothic Std","ITC Avant Garde Gothic","Adventor",
+          "Century Gothic","URW Gothic","Jost",system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+html,body{height:100%;overflow:hidden}
+body{
+  margin:0;
+  /* app shell — only the page pane scrolls */
+  position:fixed;top:0;left:0;width:100%;
+  height:100vh;height:100dvh;
+  display:flex;flex-direction:column;
+  background:var(--desk);color:var(--ink);
+  font-family:var(--font);font-weight:300;font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+}
+img,svg{max-width:100%;height:auto;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+:focus-visible{outline:1.5px solid var(--gold);outline-offset:2px}
+
+/* the default grey bar sits oddly against the warm palette (same treatment
+   the Material Hub app uses) — mobile shows an overlay bar anyway */
+.viewer{scrollbar-width:thin;scrollbar-color:#CFC5B6 transparent}
+.viewer::-webkit-scrollbar{width:9px;height:9px}
+.viewer::-webkit-scrollbar-track{background:transparent}
+.viewer::-webkit-scrollbar-thumb{
+  background:#CFC5B6;border-radius:8px;
+  border:2.5px solid transparent;background-clip:padding-box;
+}
+.viewer::-webkit-scrollbar-corner{background:transparent}
+
+/* ═══════════ 0 · WELCOME ═══════════ */
+.splash{
+  position:fixed;inset:0;z-index:100;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:34px;text-align:center;overflow:hidden;
+  background:var(--brown-d);
+  transition:opacity .55s ease,visibility .55s ease,transform .55s ease;
+}
+/* a photographic vignette, nothing more — the brown stays flat in the middle */
+.splash::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 118% 88% at 50% 44%, transparent 38%, rgba(18,10,2,.6) 100%);
+}
+.splash.gone{opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.03)}
+
+/* the printed card's own corner flourishes, barely there */
+.s-orn{
+  position:absolute;width:clamp(58px,17vw,96px);opacity:0;pointer-events:none;
+  animation:sOrn 1.1s ease .05s both;
+}
+.s-orn.tl{top:16px;left:16px}
+.s-orn.tr{top:16px;right:16px;transform:scaleX(-1)}
+.s-orn.bl{bottom:16px;left:16px;transform:scaleY(-1)}
+.s-orn.br{bottom:16px;right:16px;transform:scale(-1,-1)}
+
+.s-logo-wrap{
+  position:relative;width:min(210px,57vw);
+  animation:sLogo 1s cubic-bezier(.2,.78,.25,1) .08s both;
+}
+.s-logo{width:100%}
+/* light travelling across the letterforms — masked to the logo, so it reads as
+   metal catching the light rather than a rectangle sliding past */
+.s-shine{display:none}
+@supports ((-webkit-mask-image:url("assets/logo-lockup-cream.svg")) or (mask-image:url("assets/logo-lockup-cream.svg"))){
+  .s-shine{
+    display:block;position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(102deg,
+      transparent 41%, rgba(255,255,255,.45) 47%, rgba(255,255,255,.9) 50%,
+      rgba(255,255,255,.45) 53%, transparent 59%);
+    background-size:250% 100%;background-repeat:no-repeat;
+    -webkit-mask:url("assets/logo-lockup-cream.svg") no-repeat center/contain;
+            mask:url("assets/logo-lockup-cream.svg") no-repeat center/contain;
+    animation:sShine 1.5s cubic-bezier(.42,0,.3,1) .95s both;
+  }
+}
+
+.s-rule{
+  width:74px;height:1px;margin:26px 0 0;background:var(--gold);
+  transform:scaleX(0);animation:sRule .6s cubic-bezier(.3,.9,.3,1) .58s both;
+}
+.s-welcome{
+  margin:19px 0 0;font-family:var(--avant);
+  font-size:clamp(9.5px,2.9vw,11px);font-weight:400;
+  text-transform:uppercase;color:rgba(246,237,224,.8);
+  animation:sWelcome .9s cubic-bezier(.2,.78,.25,1) .74s both;
+}
+/* while we are quietly working out the nearest store */
+.s-hint{
+  position:absolute;left:0;right:0;bottom:calc(30px + env(safe-area-inset-bottom));
+  margin:0;font-family:var(--avant);
+  font-size:9.5px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(246,237,224,.42);
+  opacity:0;transition:opacity .45s ease;
+}
+.s-hint.on{opacity:1}
+
+@keyframes sOrn    {from{opacity:0}to{opacity:.17}}
+@keyframes sLogo   {from{opacity:0;transform:translateY(9px) scale(.955)}to{opacity:1;transform:none}}
+@keyframes sShine  {from{background-position:-75% 0}to{background-position:175% 0}}
+@keyframes sRule   {from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes sWelcome{from{opacity:0;letter-spacing:.62em}to{opacity:1;letter-spacing:.34em}}
+
+/* ═══════════ 1 · BRAND BAR ═══════════ */
+.brand{
+  flex:0 0 auto;position:relative;z-index:3;
+  display:flex;align-items:center;justify-content:center;
+  padding:calc(14px + env(safe-area-inset-top)) var(--pad) 14px;
+  background:var(--brown-d);
+  border-bottom:1px solid rgba(197,140,54,.42);
+}
+.brand .lockup{width:min(132px,37vw)}
+
+/* ═══════════ 2 · TOOLBAR ═══════════ */
+.bar{
+  flex:0 0 auto;position:relative;z-index:2;
+  display:flex;align-items:center;
+  height:44px;padding:0 var(--pad);
+  background:var(--white);border-bottom:1px solid var(--line);
+}
+.bar .store{
+  display:flex;align-items:center;gap:6px;
+  height:100%;padding-right:8px;margin-left:-2px;
+  color:var(--brown-d);
+  font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+}
+.bar .store .pin{width:12px;height:12px;color:var(--gold-d);flex:0 0 auto}
+.bar .store .cv{width:11px;height:11px;color:var(--ink-3);flex:0 0 auto}
+.bar .store:active{opacity:.6}
+.bar .spacer{flex:1 1 auto}
+.bar .count{
+  font-size:11px;font-weight:400;letter-spacing:.1em;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;
+}
+.bar .sep{width:1px;height:16px;margin:0 12px;background:var(--line)}
+body.single .bar .count,body.single .bar .sep{display:none}
+.bar .zoom{
+  display:flex;align-items:center;justify-content:center;
+  width:30px;height:30px;border:1px solid var(--line);border-radius:6px;
+  color:var(--brown-d);background:var(--white);
+}
+.bar .zoom:active{background:var(--line-2)}
+.bar .zoom svg{width:16px;height:16px}
+.bar .zoom .ico-out{display:none}
+body.zoomed .bar .zoom{border-color:var(--gold);color:var(--gold-d);background:rgba(197,140,54,.07)}
+body.zoomed .bar .zoom .ico-in{display:none}
+body.zoomed .bar .zoom .ico-out{display:block}
+
+/* ═══════════ 3 · PAGES (the only scroller) ═══════════ */
+.viewer{
+  flex:1 1 auto;min-height:0;
+  overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+  background:var(--desk);
+  scroll-snap-type:y proximity;
+}
+.sheets{
+  width:100%;
+  padding:var(--pad) var(--pad) calc(var(--pad) + 4px);
+  display:flex;flex-direction:column;gap:var(--pad);
+}
+body.zoomed .sheets{width:205%}
+.sheet{
+  margin:0;scroll-snap-align:center;
+  background:var(--white);border:1px solid var(--edge);
+  box-shadow:0 1px 1px rgba(74,47,17,.05), 0 10px 22px -18px rgba(74,47,17,.45);
+}
+.sheet img{width:100%}
+
+/* ═══════════ 4 · ACTION BAR ═══════════ */
+.dl{
+  flex:0 0 auto;position:relative;z-index:3;
+  display:flex;align-items:center;gap:12px;
+  padding:10px var(--pad) calc(10px + env(safe-area-inset-bottom));
+  background:var(--brown-x);border-top:1px solid rgba(197,140,54,.34);
+}
+.dl .ic{width:42px;height:42px;border-radius:9px;flex:0 0 auto}
+.dl .tx{flex:1 1 auto;min-width:0}
+.dl .tx b{
+  display:block;font-size:13px;font-weight:400;letter-spacing:.005em;color:var(--cream);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.dl .tx span{
+  display:block;margin-top:1px;
+  font-size:10px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:#A9977B;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.dl .cta{
+  flex:0 0 auto;display:flex;align-items:center;
+  height:42px;padding:0 18px;border-radius:8px;
+  background:var(--gold);color:#2A1B06;
+  font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+}
+.dl .cta:active{background:var(--gold-d)}
+
+/* ═══════════ APP SHEET (AirPods-style pairing card) ═══════════ */
+.appsheet{
+  position:fixed;inset:0;z-index:95;
+  display:flex;align-items:flex-end;justify-content:center;
+  background:rgba(26,17,6,.5);
+  opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s ease;
+}
+.appsheet.open{opacity:1;visibility:visible}
+.a-card{
+  position:relative;width:100%;max-width:430px;
+  font-family:var(--avant);
+  margin:0 clamp(8px,2.6vw,14px) calc(clamp(8px,2.6vw,14px) + env(safe-area-inset-bottom));
+  padding:26px 20px 18px;
+  background:var(--white);border-radius:26px;
+  box-shadow:0 24px 60px -18px rgba(26,17,6,.55);
+  text-align:center;overflow:hidden;
+  transform:translateY(112%);
+  /* the overshoot is what makes it feel like the AirPods card */
+  transition:transform .52s cubic-bezier(.18,1.05,.28,1);
+}
+.appsheet.open .a-card{transform:none}
+
+/* close — z-index and a 44px target, so no animating sibling can steal the tap */
+.a-x{
+  position:absolute;top:10px;right:10px;z-index:6;
+  display:flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border-radius:50%;color:#6B625A;
+}
+.a-x::before{
+  content:"";position:absolute;width:30px;height:30px;border-radius:50%;
+  background:#EFEAE2;transition:background .18s ease;
+}
+.a-x:active::before{background:#DFD7CB}
+.a-x svg{position:relative;width:14px;height:14px}
+
+.a-head{position:relative;padding:4px 40px 0}
+.a-title{
+  margin:0;font-size:clamp(19px,5.5vw,24px);font-weight:700;letter-spacing:-.015em;
+  color:var(--brown-d);line-height:1.14;
+}
+.a-sub{
+  margin:7px 0 0;font-size:9.5px;font-weight:400;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--gold-d);
+}
+.a-icon{
+  position:relative;
+  width:88px;height:88px;margin:18px auto 20px;border-radius:20px;
+  box-shadow:0 12px 26px -12px rgba(26,17,6,.4),0 0 0 1px rgba(26,17,6,.07);
+}
+
+/* ── features, one at a time, sliding left ── */
+.a-stage{
+  position:relative;height:70px;margin:2px 0 4px;overflow:hidden;text-align:left;
+}
+.a-slide{
+  position:absolute;left:0;right:0;top:0;height:100%;
+  display:flex;align-items:center;gap:14px;
+  opacity:0;transform:translateX(42px);pointer-events:none;
+  transition:opacity .3s ease,transform .42s cubic-bezier(.22,.85,.25,1);
+}
+/* the one leaving clears out first, so the two never read as muddled text */
+.a-slide.is-out{
+  opacity:0;transform:translateX(-42px);
+  transition:opacity .24s ease,transform .4s cubic-bezier(.4,0,.6,1);
+}
+.a-slide.is-in{
+  opacity:1;transform:none;
+  transition:opacity .36s ease .14s,transform .5s cubic-bezier(.22,.85,.25,1) .14s;
+}
+.a-slide .fi{
+  position:relative;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border-radius:13px;
+  background:#FAF3E7;color:var(--gold-d);
+  box-shadow:0 0 0 1px rgba(197,140,54,.22);
+}
+.a-slide .fi svg{width:23px;height:23px;overflow:visible}
+.a-slide .fi svg *{transform-box:fill-box;transform-origin:center}
+.a-slide .ft{min-width:0}
+.a-slide .ft b{
+  display:block;font-size:clamp(14px,4.2vw,16.5px);font-weight:700;letter-spacing:-.01em;
+  color:var(--brown-d);line-height:1.18;white-space:nowrap;
+}
+.a-slide .ft span{
+  display:block;margin-top:3px;
+  font-size:11px;font-weight:400;letter-spacing:0;color:var(--ink-2);
+}
+
+/* each slide animates its own artwork as it arrives */
+.a-slide.is-in .fi      {animation:aTile .5s cubic-bezier(.2,1.15,.3,1) .18s both}
+.a-slide.is-in .ic-coin {animation:aCoin .4s cubic-bezier(.2,1.1,.3,1) both}
+.a-slide.is-in .ic-coin:nth-of-type(1){animation-delay:.16s}
+.a-slide.is-in .ic-coin:nth-of-type(2){animation-delay:.25s}
+.a-slide.is-in .ic-coin:nth-of-type(3){animation-delay:.34s}
+.a-slide.is-in .ic-line {stroke-dasharray:27;animation:aDraw .6s cubic-bezier(.35,0,.25,1) .2s both}
+.a-slide.is-in .ic-arrow{animation:aIn .28s ease .68s both}
+.a-slide.is-in .ic-phone{animation:aIn .3s ease .18s both}
+.a-slide.is-in .ic-disc {animation:aSpin .5s cubic-bezier(.2,1.1,.3,1) .32s both}
+
+/* dots */
+.a-dots{display:flex;justify-content:center;gap:6px;margin:2px 0 0}
+.a-dots i{
+  width:5px;height:5px;border-radius:50%;background:var(--line);
+  transition:width .3s ease,background .3s ease;
+}
+.a-dots i.on{width:16px;border-radius:3px;background:var(--gold)}
+
+.a-note{
+  margin:16px 2px 0;font-size:10.5px;line-height:1.6;font-weight:400;color:var(--ink-3)
+}
+.a-cta{
+  position:relative;overflow:hidden;
+  display:none;align-items:center;justify-content:center;gap:11px;
+  height:56px;margin:14px 0 0;border-radius:28px;
+  color:#2A1B06;
+  background:linear-gradient(180deg,#E6BE73 0%,var(--gold) 52%,#B17E2B 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.5),
+    inset 0 -1px 0 rgba(90,58,10,.18),
+    0 10px 22px -10px rgba(169,115,39,.8);
+  font-size:14.5px;font-weight:700;letter-spacing:.01em;
+  transition:transform .12s ease,filter .18s ease;
+}
+.a-cta + .a-cta{margin-top:10px}
+.a-cta:active{transform:scale(.985);filter:brightness(.96)}
+.a-cta .os{width:21px;height:21px;flex:0 0 auto}
+/* one light sweep across the button as it lands, then never again */
+.a-cta::after{
+  content:"";position:absolute;top:0;bottom:0;width:45%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
+  transform:translateX(-160%);
+}
+/* show the button that matches the phone; on desktop show both */
+html[data-os="ios"]     .a-cta[data-p="ios"],
+html[data-os="android"] .a-cta[data-p="android"],
+html[data-os="other"]   .a-cta,
+html[data-os="unknown"] .a-cta{display:flex}
+
+/* ══ the staging, one thing at a time ══ */
+.appsheet.open .a-icon      {animation:aPop   .55s cubic-bezier(.2,1.12,.3,1) .10s both}
+.appsheet.open .a-head      {animation:aIn    .44s cubic-bezier(.22,.8,.28,1) .18s both}
+.appsheet.open .a-stage     {animation:aIn    .42s ease .30s both}
+.appsheet.open .a-dots      {animation:aIn    .36s ease .46s both}
+.appsheet.open .a-note      {animation:aIn    .42s ease .56s both}
+.appsheet.open .a-cta       {animation:aRise  .5s  cubic-bezier(.2,1.06,.3,1) .66s both}
+.appsheet.open .a-cta::after{animation:aSweep .85s cubic-bezier(.4,0,.3,1) 1s both}
+
+
+@keyframes aIn    {from{opacity:0;transform:translateY(11px)}to{opacity:1;transform:none}}
+@keyframes aSlide {from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:none}}
+@keyframes aRise  {from{opacity:0;transform:translateY(15px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes aPop   {0%{opacity:0;transform:scale(.82)}62%{transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
+@keyframes aTile  {0%{opacity:0;transform:scale(.6) rotate(-8deg)}60%{transform:scale(1.08) rotate(2deg)}100%{opacity:1;transform:none}}
+@keyframes aThread{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes aSweep {from{transform:translateX(-160%)}to{transform:translateX(320%)}}
+@keyframes aCoin  {from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@keyframes aDraw  {from{stroke-dashoffset:27}to{stroke-dashoffset:0}}
+@keyframes aSpin  {0%{opacity:0;transform:scale(.2) rotate(-120deg)}70%{transform:scale(1.12) rotate(8deg)}100%{opacity:1;transform:none}}
+
+/* ═══════════ STORE SHEET ═══════════ */
+.picker{
+  position:fixed;inset:0;z-index:90;
+  display:flex;align-items:flex-end;justify-content:center;
+  background:rgba(26,17,6,.5);
+  opacity:0;visibility:hidden;transition:opacity .24s ease,visibility .24s ease;
+}
+.picker.open{opacity:1;visibility:visible}
+.p-card{
+  width:100%;max-width:480px;
+  font-family:var(--avant);
+  background:var(--white);border-radius:14px 14px 0 0;
+  padding:8px 0 calc(6px + env(safe-area-inset-bottom));
+  transform:translateY(12px);transition:transform .26s cubic-bezier(.22,.8,.28,1);
+}
+.picker.open .p-card{transform:none}
+.p-grab{width:34px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 14px}
+.p-head{padding:0 20px 14px;border-bottom:1px solid var(--line-2)}
+.p-head h2{margin:0;font-size:15.5px;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+.p-head p{margin:4px 0 0;font-size:11.5px;font-weight:400;color:var(--ink-2)}
+
+.p-row{
+  display:flex;align-items:center;gap:12px;width:100%;
+  min-height:52px;padding:0 20px;text-align:left;
+  border-bottom:1px solid var(--line-2);
+}
+.p-row:active{background:var(--line-2)}
+.p-row .nm{flex:1 1 auto;font-size:13.5px;font-weight:400;color:var(--ink)}
+.p-row .ck{width:16px;height:16px;flex:0 0 auto;color:var(--gold-d);opacity:0}
+.p-row[aria-current="true"] .nm{font-weight:700}
+.p-row[aria-current="true"] .ck{opacity:1}
+.p-row .gi{width:17px;height:17px;flex:0 0 auto;color:var(--gold-d)}
+.p-row .ck-arrow{opacity:.45}
+.p-row.geo .nm{color:var(--brown-d);font-weight:700}
+.p-row.geo[data-busy="1"]{opacity:.5;pointer-events:none}
+.p-note{
+  margin:0;padding:12px 20px 6px;
+  font-size:10.5px;line-height:1.55;font-weight:400;color:var(--ink-3)
+}
+
+@media (prefers-reduced-motion:reduce){
+  .splash,.s-orn,.s-logo-wrap,.s-shine,.s-rule,.s-welcome{animation:none;transition:none}
+  .s-orn{opacity:.17}
+  .s-shine{display:none}
+  .s-rule{transform:none}
+  .s-welcome{letter-spacing:.34em}
+  .picker,.p-card,.appsheet,.a-card{transition:none}
+  .a-slide.is-in .ic-line{stroke-dasharray:none}
+  .appsheet.open .a-icon,.appsheet.open .a-head,
+  .appsheet.open .a-note,.appsheet.open .a-cta,.appsheet.open .a-cta::after,
+  .appsheet.open .a-stage,.appsheet.open .a-dots,
+  .a-slide.is-in .fi,.a-slide.is-in .ic-coin,.a-slide.is-in .ic-line,
+  .a-slide.is-in .ic-arrow,.a-slide.is-in .ic-phone,.a-slide.is-in .ic-disc{animation:none}
+  /* no rotation — show all three, stacked */
+  .a-stage{height:auto}
+  .a-slide{position:static;opacity:1;transform:none;transition:none;padding:7px 0}
+  .a-dots{display:none}
+}
+@media (min-width:720px){
+  .sheets{max-width:600px;margin:0 auto}
+  body.zoomed .sheets{max-width:none;width:145%}
+}

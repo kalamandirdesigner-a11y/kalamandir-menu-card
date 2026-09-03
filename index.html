@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en" data-os="unknown">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Menu · Kalamandir Jewellers</title>
+<meta name="description" content="Kalamandir Jewellers menu — beverages and snacks. Freshly made, wholesome, served with care.">
+<meta name="theme-color" content="#4A2F11">
+<meta name="color-scheme" content="light">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kalamandir Menu">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kalamandir Jewellers Limited">
+<meta property="og:title" content="Menu · Kalamandir Jewellers">
+<meta property="og:description" content="Freshly Made · Wholesome · Served with Care.">
+<meta property="og:image" content="og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+
+<link rel="preload" as="image" href="assets/logo-lockup-cream.svg">
+<link rel="preload" as="font" type="font/woff2" href="fonts/jost-var.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/adventor-700.woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+
+<!-- ═══════════ 0 · WELCOME ═══════════ -->
+<div class="splash" id="splash" role="status" aria-live="polite">
+  <img class="s-orn tl" src="assets/ornament-cream.webp" alt="" aria-hidden="true" width="240" height="229">
+  <img class="s-orn tr" src="assets/ornament-cream.webp" alt="" aria-hidden="true" width="240" height="229">
+  <img class="s-orn bl" src="assets/ornament-cream.webp" alt="" aria-hidden="true" width="240" height="229">
+  <img class="s-orn br" src="assets/ornament-cream.webp" alt="" aria-hidden="true" width="240" height="229">
+
+  <div class="s-logo-wrap">
+    <img class="s-logo" src="assets/logo-lockup-cream.svg" width="1714" height="919" alt="Kalamandir Jewellers" fetchpriority="high">
+    <span class="s-shine" aria-hidden="true"></span>
+  </div>
+
+  <div class="s-rule" aria-hidden="true"></div>
+  <p class="s-welcome">Welcome to Kalamandir</p>
+  <p class="s-hint" id="sHint">Finding your nearest store</p>
+</div>
+
+<!-- ═══════════ 1 · BRAND ═══════════ -->
+<header class="brand">
+  <img class="lockup" src="assets/logo-lockup-cream.svg" width="1714" height="919" alt="Kalamandir Jewellers">
+</header>
+
+<!-- ═══════════ 2 · TOOLBAR ═══════════ -->
+<div class="bar">
+  <button class="store" id="chip" type="button" aria-haspopup="dialog">
+    <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"></path><circle cx="12" cy="10" r="2.3"></circle>
+    </svg>
+    <span id="chipName">Select store</span>
+    <svg class="cv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+  </button>
+
+  <span class="spacer"></span>
+  <span class="count" id="pg">1 / 3</span>
+  <span class="sep" aria-hidden="true"></span>
+
+  <button class="zoom" id="zoom" type="button" aria-label="Zoom in" aria-pressed="false">
+    <svg class="ico-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="10.6" cy="10.6" r="6.6"></circle><path d="M19.4 19.4l-4.1-4.1M10.6 8.1v5M8.1 10.6h5"></path>
+    </svg>
+    <svg class="ico-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="10.6" cy="10.6" r="6.6"></circle><path d="M19.4 19.4l-4.1-4.1M8.1 10.6h5"></path>
+    </svg>
+  </button>
+</div>
+
+<!-- ═══════════ 3 · PAGES ═══════════ -->
+<main class="viewer" id="viewer" aria-label="Kalamandir menu card">
+  <div class="sheets" id="sheets"><!-- pages injected per store --></div>
+</main>
+
+<!-- ═══════════ 4 · APP ═══════════ -->
+<footer class="dl">
+  <img class="ic" src="assets/app-icon.webp" alt="" aria-hidden="true" width="192" height="192">
+  <div class="tx">
+    <b>Kalamandir Jewellers App</b>
+    <span id="dlSub">Digital Gold · Gold SIP</span>
+  </div>
+
+  <button class="cta" id="dlCta" type="button" aria-haspopup="dialog">Install</button>
+</footer>
+
+<!-- ═══════════ APP SHEET ═══════════ -->
+<div class="appsheet" id="appsheet" role="dialog" aria-modal="true" aria-labelledby="aTitle">
+  <div class="a-card">
+    <button class="a-x" id="aClose" type="button" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+
+    <div class="a-head">
+      <h2 class="a-title" id="aTitle">Kalamandir Jewellers</h2>
+      <p class="a-sub">Official App</p>
+    </div>
+
+    <img class="a-icon" src="assets/app-icon-lg.webp" width="384" height="384" alt="Kalamandir Jewellers app icon">
+
+    <div class="a-stage" id="aStage" aria-label="What the app does">
+      <div class="a-slide">
+        <span class="fi" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse class="ic-coin" cx="12" cy="17.2" rx="7.6" ry="2.8"></ellipse>
+            <ellipse class="ic-coin" cx="12" cy="12"   rx="7.6" ry="2.8"></ellipse>
+            <ellipse class="ic-coin" cx="12" cy="6.8"  rx="7.6" ry="2.8"></ellipse>
+          </svg>
+        </span>
+        <span class="ft"><b>Gold Investment Scheme</b><span>Grow your savings in gold</span></span>
+      </div>
+
+      <div class="a-slide">
+        <span class="fi" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path class="ic-line" d="M3 17.6 9 11.6l3.6 3.6L20.4 7.4"></path>
+            <path class="ic-arrow" d="M15.3 7.4h5.1v5.1"></path>
+          </svg>
+        </span>
+        <span class="ft"><b>Gold SIP</b><span>Monthly plans for your jewellery goals</span></span>
+      </div>
+
+      <div class="a-slide">
+        <span class="fi" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <g class="ic-phone">
+              <rect x="2.6" y="2.4" width="12" height="19.2" rx="2.7"></rect>
+              <path d="M7.2 18.8h2.8"></path>
+            </g>
+            <g class="ic-disc">
+              <circle cx="17.6" cy="14.8" r="4.9" fill="#FAF3E7"></circle>
+              <circle cx="17.6" cy="14.8" r="2.2"></circle>
+            </g>
+          </svg>
+        </span>
+        <span class="ft"><b>Digital Gold</b><span>Buy, save and track digital gold</span></span>
+      </div>
+    </div>
+
+    <div class="a-dots" id="aDots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+
+    <p class="a-note">Explore new collections and manage your gold savings with the Kalamandir Jewellers app.</p>
+
+    <a class="a-cta" data-p="android" id="aCtaAnd" href="https://play.google.com/store/apps/details?id=com.dsoft.kalamandirjewellers&amp;hl=en_IN" target="_blank" rel="noopener">
+      <svg class="os" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7.6 11.6 5.4 6.7M16.4 11.6 18.6 6.7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"></path>
+        <path fill="currentColor" fill-rule="evenodd" d="M3 19.4a9 9 0 0 1 18 0Z M9.75 15a1.15 1.15 0 1 1-2.3 0 1.15 1.15 0 0 1 2.3 0Z M16.55 15a1.15 1.15 0 1 1-2.3 0 1.15 1.15 0 0 1 2.3 0Z"></path>
+      </svg>
+      <span>Download App</span>
+    </a>
+
+    <a class="a-cta" data-p="ios" id="aCtaIos" href="https://apps.apple.com/in/app/kalamandir-jewellers/id6462873415" target="_blank" rel="noopener">
+      <svg class="os" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M17.05 12.53c-.02-2.4 1.96-3.55 2.05-3.61-1.12-1.64-2.86-1.86-3.47-1.89-1.48-.12-2.88.86-3.63.86-.76 0-1.91-.84-3.14-.82-1.61.02-3.1.94-3.93 2.38-1.68 2.91-.43 7.21 1.2 9.57.8 1.15 1.75 2.44 3 2.39 1.2-.05 1.66-.78 3.11-.78 1.44 0 1.85.78 3.12.75 1.29-.02 2.11-1.17 2.9-2.33.91-1.33 1.29-2.62 1.31-2.69-.03-.01-2.5-.96-2.52-3.81"></path>
+        <path d="M14.9 5.51c.66-.8 1.1-1.91.98-3.02-.98.04-2.16.65-2.84 1.45-.61.7-1.14 1.83-1 2.91 1.09.08 2.2-.55 2.86-1.34"></path>
+      </svg>
+      <span>Download App</span>
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════ STORE SHEET ═══════════ -->
+<div class="picker" id="picker" role="dialog" aria-modal="true" aria-labelledby="pTitle">
+  <div class="p-card">
+    <div class="p-grab" aria-hidden="true"></div>
+    <div class="p-head">
+      <h2 id="pTitle">Which store are you at?</h2>
+      <p>The menu differs by location.</p>
+    </div>
+
+    <button class="p-row geo" id="pGeo" type="button">
+      <svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="2.4"></circle>
+        <path d="M12 2v2M12 20v2M2 12h2M20 12h2"></path>
+      </svg>
+      <span class="nm" id="pGeoLabel">Use my location</span>
+      <svg class="ck ck-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>
+    </button>
+
+    <div id="pList"></div>
+    <p class="p-note" id="pNote">Change this any time from the store name at the top.</p>
+  </div>
+</div>
+
+<script src="app.js" defer></script>
+</body>
+</html>
