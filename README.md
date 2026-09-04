@@ -64,9 +64,34 @@ store by appending a line to both plus an entry to `STORES` in `index.html`.
 > Kosamba phone in Ahmedabad or Mumbai, which would show the wrong menu silently.
 > One link per showroom is accurate; GPS is offered as a convenience on top.
 
+## What this site shows, and where it comes from
+
+The cards, the store list and the app panel are **not** edited here any more. They live
+in the Kalamandir Branding Materials portal, under Settings → Menu card site, and this
+site reads them from one public endpoint on load.
+
+The config block at the top of `app.js` is the fallback: what a first-time visitor sees
+while the fetch is in flight, and what shows if the portal is unreachable. The last good
+answer is cached in `localStorage`, so a returning visitor opens on the current menu
+straight away. A card with no image uploaded in the portal keeps using the `.webp` that
+ships here.
+
+Two lines in `vercel.json` make that possible and must stay: the Content-Security-Policy
+allows `connect-src` to the portal API and `img-src` from Cloudinary. Tightening either
+back to `'none'`/`'self'` breaks the menu silently — no error, just the old card forever.
+
 ## Deploy
 
 Hosted on **Vercel** (free/Hobby). Vercel adds no badge to the served page.
+
+The project is connected to `kalamandirdesigner-a11y/kalamandir-menu-card`, so **a push
+to `main` deploys it** — nothing else to run:
+
+```bash
+cd "/Users/adityajain/Downloads/Aditya Jain/1/kalamandir-menu" && git push
+```
+
+The CLI route below still works and needs no Git, if the connection is ever removed.
 
 Vercel has no drag-and-drop upload, so it goes out from the CLI. First run opens a
 browser once to log in, then remembers you:
