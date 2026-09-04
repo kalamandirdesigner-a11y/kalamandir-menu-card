@@ -2,8 +2,17 @@
   "use strict";
 
   /* ══════════════════════════════════════════════════════════════
-     CONFIG — the only part that needs editing later
+     CONFIG
+     What follows is the fallback: correct on the day it shipped, and what a first-time
+     visitor sees while the network is still thinking. The live version is kept in the
+     branding portal and fetched below, so a new menu card or a changed blurb needs no
+     redeploy of this site. The last answer is cached, so a returning visitor gets the
+     current one immediately.
      ══════════════════════════════════════════════════════════════ */
+
+  var CONFIG_URL = "https://kalamandir-branding-api.onrender.com/api/menu";
+  var CONFIG_KEY = "kmConfig";
+  var CONFIG_WAIT = 2200;   // the welcome screen covers ~3s; wait inside that
 
   var IOS_URL = "https://apps.apple.com/in/app/kalamandir-jewellers/id6462873415";
   var AND_URL = "https://play.google.com/store/apps/details?id=com.dsoft.kalamandirjewellers&hl=en_IN";
@@ -241,17 +250,21 @@
 
   var CHECK = '<svg class="ck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg>';
 
-  STORES.forEach(function(store){
-    var b = document.createElement("button");
-    b.type = "button";
-    b.className = "p-row";
-    b.dataset.id = store.id;
-    b.setAttribute("aria-current", "false");
-    b.innerHTML = '<span class="nm"></span>' + CHECK;
-    b.querySelector(".nm").textContent = store.name;
-    b.addEventListener("click", function(){ applyStore(store, true); closePicker(); });
-    list.appendChild(b);
-  });
+  function buildPicker(){
+    list.textContent = "";
+    STORES.forEach(function(store){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "p-row";
+      b.dataset.id = store.id;
+      b.setAttribute("aria-current", "false");
+      b.innerHTML = '<span class="nm"></span>' + CHECK;
+      b.querySelector(".nm").textContent = store.name;
+      b.addEventListener("click", function(){ applyStore(store, true); closePicker(); });
+      list.appendChild(b);
+    });
+  }
+  buildPicker();
 
   function applyStore(store, remember){
     current = store;
@@ -362,6 +375,7 @@
     catch (e) { return null; }
   }
 
+  function boot(){
   var urlStore = fromUrl();
   if (urlStore) {
     applyStore(urlStore, false);   // a per-store link wins and never overwrites a saved choice
@@ -405,4 +419,81 @@
       });
     }
   }
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+     live config
+     The portal holds what this site shows. Take the cached answer first so a returning
+     visitor never waits, ask for a fresh one, and start as soon as either lands — or
+     after a short wait, so a sleeping API can never hold up the menu.
+     ══════════════════════════════════════════════════════════════ */
+  function applyConfig(cfg){
+    if (!cfg || typeof cfg !== "object") return false;
+    var touched = false;
+
+    if (cfg.cards && typeof cfg.cards === "object") {
+      var next = {};
+      Object.keys(cfg.cards).forEach(function(key){
+        var c = cfg.cards[key];
+        if (!c || !c.image) return;
+        next[key] = { pages: [{ src: c.image, alt: c.alt || "Kalamandir menu card" }],
+                      label: c.label || key };
+      });
+      if (Object.keys(next).length) { MENUS = next; touched = true; }
+    }
+
+    if (Array.isArray(cfg.stores) && cfg.stores.length) {
+      STORES = cfg.stores.map(function(st){
+        return { id: String(st.id || "").toLowerCase(), name: st.name,
+                 menu: st.menu, lat: Number(st.lat) || 0, lng: Number(st.lng) || 0 };
+      }).filter(function(st){ return st.id && st.name; });
+      buildPicker();
+      touched = true;
+    }
+
+    if (cfg.app) {
+      if (cfg.app.ios)     IOS_URL = cfg.app.ios;
+      if (cfg.app.android) AND_URL = cfg.app.android;
+      var t = document.getElementById("aTitle");
+      var sb = document.querySelector(".a-sub");
+      var nt = document.querySelector(".a-note");
+      if (t  && cfg.app.title)    t.textContent  = cfg.app.title;
+      if (sb && cfg.app.subtitle) sb.textContent = cfg.app.subtitle;
+      if (nt && cfg.app.note)     nt.textContent = cfg.app.note;
+      if (aIos && cfg.app.ios)     aIos.href = cfg.app.ios;
+      if (aAnd && cfg.app.android) aAnd.href = cfg.app.android;
+      touched = true;
+    }
+    return touched;
+  }
+
+  (function start(){
+    var started = false;
+    function go(){ if (started) return; started = true; boot(); }
+
+    /* whatever was last seen, so a returning visitor starts on the current menu */
+    try {
+      var cached = JSON.parse(localStorage.getItem(CONFIG_KEY) || "null");
+      if (cached) applyConfig(cached);
+    } catch (e) {}
+
+    var timer = setTimeout(go, CONFIG_WAIT);
+
+    if (!window.fetch) { clearTimeout(timer); go(); return; }
+    fetch(CONFIG_URL, { cache: "no-store" })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(cfg){
+        if (!cfg) return;
+        try { localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg)); } catch (e) {}
+        if (started) {
+          /* already on screen — the card is the part worth correcting straight away */
+          applyConfig(cfg);
+          if (current) renderMenu(current.menu);
+        } else {
+          applyConfig(cfg);
+        }
+      })
+      .catch(function(){})
+      .then(function(){ clearTimeout(timer); go(); });
+  })();
 })();
