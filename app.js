@@ -50,6 +50,38 @@
   var STORE_KEY = "kmStore";
 
   /* ══════════════════════════════════════════════════════════════
+     counting
+     The portal wants to know how the card is used: menus opened, which stores, and how
+     often the app buttons are pressed. Counters only — nobody is identified and nothing
+     is stored per person. It is fire-and-forget: if it fails, the menu does not care.
+     ══════════════════════════════════════════════════════════════ */
+  var EVENT_URL = CONFIG_URL.replace(/\/menu$/, "/menu/event");
+  var viewCounted = false;
+
+  function report(type, store){
+    try {
+      var body = JSON.stringify({ type: type, store: store || "" });
+      /* sendBeacon survives the tab closing, which a store link often causes */
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(EVENT_URL, new Blob([body], { type: "text/plain" }));
+        return;
+      }
+      if (window.fetch) fetch(EVENT_URL, {
+        method: "POST", headers: { "Content-Type": "text/plain" },
+        body: body, keepalive: true
+      }).catch(function(){});
+    } catch (e) {}
+  }
+
+  function countView(store){
+    if (viewCounted) return;
+    viewCounted = true;
+    report("view", store);
+  }
+  /* nobody picked a store and none could be guessed — still one person who looked */
+  setTimeout(function(){ countView(""); }, 12000);
+
+  /* ══════════════════════════════════════════════════════════════
      welcome
      ══════════════════════════════════════════════════════════════ */
   var splash = document.getElementById("splash");
@@ -155,7 +187,16 @@
     dots.forEach(function(d, k){ d.classList.toggle("on", k === 0); });
   }
 
-  document.getElementById("dlCta").addEventListener("click", openApp);
+  document.getElementById("dlCta").addEventListener("click", function(){
+    report("install", current ? current.id : "");
+    openApp();
+  });
+  [aAnd, aIos].forEach(function(el){
+    if (!el) return;
+    el.addEventListener("click", function(){
+      report(el.dataset.p === "ios" ? "ios" : "android", current ? current.id : "");
+    });
+  });
   appsheet.addEventListener("click", function(e){
     if (e.target.closest && e.target.closest(".a-x")) { closeApp(); return; }
     if (e.target === appsheet) closeApp();          // tap outside the card
@@ -267,6 +308,7 @@
   buildPicker();
 
   function applyStore(store, remember){
+    countView(store.id);
     current = store;
     chipName.textContent = store.name;
     document.documentElement.setAttribute("data-store", store.id);
