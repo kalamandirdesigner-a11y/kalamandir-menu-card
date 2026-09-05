@@ -247,3 +247,16 @@ python3 -m http.server 4711 --directory "/Users/adityajain/Downloads/Aditya Jain
 
 Clean paths (`/surat`) need the host's rewrite rules, so locally use
 `http://localhost:4711/?store=surat` instead.
+
+## The in-store screen
+
+`/screen?s=<screen id>` is a second page on this site, for the panels on the shop walls
+— the creative on top, today's gold rates underneath. Nothing about it is edited here:
+the slides, how long each one holds, the shape of the screen and the rates all come from
+the branding portal, under **Screen display**, which is where each screen's link is
+copied from.
+
+It reads `GET /api/display?screen=<id>` once a minute, keeps the last good answer through
+a dropped connection, and says the screen was removed if that id no longer exists. The
+site's Content-Security-Policy already allows the API and Cloudinary, which is what it
+needs; nothing else in this repo touches it.

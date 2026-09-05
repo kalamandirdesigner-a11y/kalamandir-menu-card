@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kalamandir — Screen</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="/screen/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/screen/display.css">
+</head>
+<body>
+
+<!-- One screen on a wall: the creative on top, today's rates underneath. Nothing here is
+     editable — it is filled from the portal and refreshes itself. -->
+<main class="screen" id="screen">
+  <section class="stage" id="stage" aria-label="Creative">
+    <p class="waiting" id="waiting">Waiting for the first image…</p>
+    <!-- fills across while a slide is up, so anyone glancing at it knows the screen is
+         running rather than frozen on one picture -->
+    <span class="tick" id="tick" hidden><i id="tickFill"></i></span>
+    <span class="dots" id="dots" hidden></span>
+  </section>
+
+  <footer class="rates" id="rates" hidden>
+    <div class="rates__head">
+      <span class="mark" aria-hidden="true"></span>
+      <h1 class="rates__title">Gold Rates</h1>
+      <!-- the trade quotes per 10 grams; say so, so nobody has to ask -->
+      <span class="rates__unit">Per 10 gms</span>
+      <span class="rates__stamp" id="ratesStamp"></span>
+    </div>
+    <div class="rates__row" id="ratesRow"></div>
+  </footer>
+</main>
+
+<div class="offline" id="offline" hidden>Showing the last known screen</div>
+
+<script src="/screen/config.js"></script>
+<script src="/screen/display.js"></script>
+</body>
+</html>
