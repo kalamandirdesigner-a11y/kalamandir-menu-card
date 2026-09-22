@@ -10,7 +10,7 @@
      current one immediately.
      ══════════════════════════════════════════════════════════════ */
 
-  var CONFIG_URL = "https://kalamandir-branding-api.onrender.com/api/menu";
+  var CONFIG_URL = "https://kalamandir-branding-materials.pages.dev/api/menu";
   var CONFIG_KEY = "kmConfig";
   var CONFIG_WAIT = 2200;   // the welcome screen covers ~3s; wait inside that
 
